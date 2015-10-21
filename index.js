@@ -150,6 +150,25 @@ File.prototype.readIntLE = function(pos, len, cb) {
 	});
 };
 
+File.prototype.readStringLenBE = function(pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
+
+	this.readUIntBE(pos, len_size, (err, len) => {
+		if (err) return cb(err);
+
+		this.readString(pos + len_size, len, cb);
+	});
+};
+
+File.prototype.readStringLenLE = function(pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
+
+	this.readUIntLE(pos, len_size, (err, len) => {
+		if (err) return cb(err);
+
+		this.readString(pos + len_size, len, cb);
+	});
+};
 
 File.prototype.write = function(data, pos, cb) {
 	cb = makeCallback(arguments, this);
@@ -191,4 +210,22 @@ File.prototype.writeIntLE = function(value, pos, len, cb) {
 	this.write(buffer, pos, cb);
 };
 
+File.prototype.writeStringLenBE = function(str, pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
 
+	var str_len = Buffer.byteLength(str);
+	var buffer = new Buffer(len_size + str_len);
+	buffer.writeUIntBE(str_len, 0, len_size);
+	buffer.write(str, len_size);
+	this.write(buffer, pos, cb);
+};
+
+File.prototype.writeStringLenLE = function(str, pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
+
+	var str_len = Buffer.byteLength(str);
+	var buffer = new Buffer(len_size + str_len);
+	buffer.writeUIntLE(str_len, 0, len_size);
+	buffer.write(str, len_size);
+	this.write(buffer, pos, cb);
+};
