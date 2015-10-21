@@ -108,6 +108,10 @@ File.prototype.rename = function(dest, cb) {
 	})
 };
 
+//
+// Read methods
+//
+
 File.prototype.read = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
@@ -224,6 +228,10 @@ File.prototype.readBufferLenLE = function(pos, len_size, cb) {
 File.prototype.createReadStruct = function(pos) {
 	return new Struct.Read(this, pos);
 };
+
+//
+// Write methods
+//
 
 File.prototype.write = function(data, pos, cb) {
 	cb = makeCallback(arguments, this);
