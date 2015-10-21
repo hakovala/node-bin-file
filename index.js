@@ -4,6 +4,8 @@ var fs = require('fs');
 var path = require('path');
 var debug = require('debug')('file:file');
 
+var Struct = require('./lib/struct');
+
 function File(filepath) {
 	if (!(this instanceof File))
 		return new File(filepath);
@@ -195,6 +197,10 @@ File.prototype.readStringLenLE = function(pos, len_size, cb) {
 	});
 };
 
+File.prototype.createReadStruct = function(pos) {
+	return new Struct.Read(this, pos);
+};
+
 File.prototype.write = function(data, pos, cb) {
 	cb = makeCallback(arguments, this);
 	fs.write(this.fd, data, 0, data.length, pos, cb);
@@ -252,4 +258,8 @@ File.prototype.writeStringLenLE = function(str, pos, len_size, cb) {
 	buffer.writeUIntLE(str_len, 0, len_size);
 	buffer.write(str, len_size);
 	this.write(buffer, pos, cb);
+};
+
+File.prototype.createWriteStruct = function(pos) {
+	return new Struct.Write(this, pos);
 };
