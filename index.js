@@ -106,67 +106,80 @@ File.prototype.read = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
 	var buffer = new Buffer(len);
-	fs.read(this.fd, buffer, 0, len, pos, cb);
+	fs.read(this.fd, buffer, 0, len, pos, (err, bytesRead, data) => {
+		cb(err, data, bytesRead);
+	});
 };
 
 File.prototype.readString = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
-	this.read(pos, len, (err, bytesRead, data) => {
+
+	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
-		cb(null, data.toString());
+		cb(null, data.toString(), bytesRead);
 	});
 };
 
 File.prototype.readUIntBE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
-	this.read(pos, len, (err, bytesRead, data) => {
+
+	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readUIntBE(0, len);
-		cb(null, value);
+		cb(null, value, bytesRead);
 	});
 };
 File.prototype.readUIntLE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
-	this.read(pos, len, (err, bytesRead, data) => {
+
+	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readUIntLE(0, len);
-		cb(null, value);
+		cb(null, value, bytesRead);
 	});
 };
 File.prototype.readIntBE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
-	this.read(pos, len, (err, bytesRead, data) => {
+
+	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readIntBE(0, len);
-		cb(null, value);
+		cb(null, value, bytesRead);
 	});
 };
 File.prototype.readIntLE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
-	this.read(pos, len, (err, bytesRead, data) => {
+
+	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readIntLE(0, len);
-		cb(null, value);
+		cb(null, value, bytesRead);
 	});
 };
 
 File.prototype.readStringLenBE = function(pos, len_size, cb) {
 	cb = makeCallback(arguments, this);
 
-	this.readUIntBE(pos, len_size, (err, len) => {
+	this.readUIntBE(pos, len_size, (err, len, lenBytesRead) => {
 		if (err) return cb(err);
 
-		this.readString(pos + len_size, len, cb);
+		this.readString(pos + lenBytesRead, len, (err, str, strBytesRead) => {
+			console.log(lenBytesRead, strBytesRead);
+			cb(err, str, lenBytesRead + strBytesRead);
+		});
 	});
 };
 
 File.prototype.readStringLenLE = function(pos, len_size, cb) {
 	cb = makeCallback(arguments, this);
 
-	this.readUIntLE(pos, len_size, (err, len) => {
+	this.readUIntLE(pos, len_size, (err, len, lenBytesRead) => {
 		if (err) return cb(err);
 
-		this.readString(pos + len_size, len, cb);
+		this.readString(pos + lenBytesRead, len, (err, str, strBytesRead) => {
+			console.log(lenBytesRead, strBytesRead);
+			cb(err, str, lenBytesRead + strBytesRead);
+		});
 	});
 };
 
