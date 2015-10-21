@@ -106,7 +106,7 @@ File.prototype.read = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
 	var buffer = new Buffer(len);
-	fs.read(this.fd, buffer, 0, len, position, cb);
+	fs.read(this.fd, buffer, 0, len, pos, cb);
 };
 
 File.prototype.readString = function(pos, len, cb) {
