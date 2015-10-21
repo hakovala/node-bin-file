@@ -229,6 +229,12 @@ File.prototype.createReadStruct = function(pos) {
 	return new Struct.Read(this, pos);
 };
 
+// Read aliases
+File.prototype.readUInt = File.prototype.readUIntBE;
+File.prototype.readInt = File.prototype.readIntBE;
+File.prototype.readStringLen = File.prototype.readStringLenBE;
+File.prototype.readBufferLen = File.prototype.readBufferLenBE;
+
 //
 // Write methods
 //
@@ -309,3 +315,9 @@ File.prototype.writeBufferLenLE = function(data, pos, len_size, cb) {
 File.prototype.createWriteStruct = function(pos) {
 	return new Struct.Write(this, pos);
 };
+
+// Write aliases
+File.prototype.writeUInt = File.prototype.writeUIntBE;
+File.prototype.writeInt = File.prototype.writeIntBE;
+File.prototype.writeStringLen = File.prototype.writeStringLenBE;
+File.prototype.writeBufferLen = File.prototype.writeBufferLenBE;
