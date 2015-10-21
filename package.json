@@ -1,9 +1,8 @@
 {
-  "name": "files",
+  "name": "bin-file",
   "version": "0.1.0",
-  "description": "file utility module",
+  "description": "Binary file manipulation helper module",
   "main": "index.js",
-  "private": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/hakovala/node-bin-file.git"
