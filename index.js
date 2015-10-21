@@ -177,7 +177,6 @@ File.prototype.readStringLenBE = function(pos, len_size, cb) {
 		if (err) return cb(err);
 
 		this.readString(pos + lenBytesRead, len, (err, str, strBytesRead) => {
-			console.log(lenBytesRead, strBytesRead);
 			cb(err, str, lenBytesRead + strBytesRead);
 		});
 	});
@@ -191,7 +190,6 @@ File.prototype.readStringLenLE = function(pos, len_size, cb) {
 		if (err) return cb(err);
 
 		this.readString(pos + lenBytesRead, len, (err, str, strBytesRead) => {
-			console.log(lenBytesRead, strBytesRead);
 			cb(err, str, lenBytesRead + strBytesRead);
 		});
 	});
