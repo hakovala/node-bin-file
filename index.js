@@ -195,6 +195,32 @@ File.prototype.readStringLenLE = function(pos, len_size, cb) {
 	});
 };
 
+File.prototype.readBufferLenBE = function(pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
+
+	debug('read buffer with len prefix %d bytes at %d', len_size, pos);
+	this.readUIntBE(pos, len_size, (err, len, lenBytesRead) => {
+		if (err) return cb(err);
+
+		this.read(pos + lenBytesRead, len, (err, data, dataBytesRead) => {
+			cb(err, str, lenBytesRead + dataBytesRead);
+		});
+	});
+};
+
+File.prototype.readBufferLenLE = function(pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
+
+	debug('read buffer with len prefix %d bytes at %d', len_size, pos);
+	this.readUIntLE(pos, len_size, (err, len, lenBytesRead) => {
+		if (err) return cb(err);
+
+		this.read(pos + lenBytesRead, len, (err, data, dataBytesRead) => {
+			cb(err, str, lenBytesRead + dataBytesRead);
+		});
+	});
+};
+
 File.prototype.createReadStruct = function(pos) {
 	return new Struct.Read(this, pos);
 };
@@ -256,6 +282,20 @@ File.prototype.writeStringLenLE = function(str, pos, len_size, cb) {
 	buffer.writeUIntLE(str_len, 0, len_size);
 	buffer.write(str, len_size);
 	this.write(buffer, pos, cb);
+};
+
+File.prototype.writeBufferLenBE = function(data, pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
+	var len_buffer = new Buffer(len_size);
+	len_buffer.writeUIntBE(data.length, 0, len_size);
+	this.write(Buffer.concat([len_buffer, data]), pos, cb);
+};
+
+File.prototype.writeBufferLenLE = function(data, pos, len_size, cb) {
+	cb = makeCallback(arguments, this);
+	var len_buffer = new Buffer(len_size);
+	len_buffer.writeUIntLE(data.length, 0, len_size);
+	this.write(Buffer.concat([len_buffer, data]), pos, cb);
 };
 
 File.prototype.createWriteStruct = function(pos) {
