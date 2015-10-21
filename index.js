@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var debug = require('debug')('file:file');
 
 function File(filepath) {
 	if (!(this instanceof File))
@@ -49,12 +50,15 @@ File.prototype.open = function(flags, mode, cb) {
 	flags = flags || this._flags || 'r+';
 	mode = mode || this._mode;
 
+	debug('open: %s (%s)', this.filepath, flags);
+
 	fs.open(this.filepath, flags, mode, (err, fd) => {
 		if (err) return cb(err);
 
 		this.fd = fd;
 		this._flags = flags;
 		this._mode = mode;
+
 		cb(null, this);
 	});
 };
@@ -105,6 +109,7 @@ File.prototype.rename = function(dest, cb) {
 File.prototype.read = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read: %d bytes at %d', len, pos);
 	var buffer = new Buffer(len);
 	fs.read(this.fd, buffer, 0, len, pos, (err, bytesRead, data) => {
 		cb(err, data, bytesRead);
@@ -114,6 +119,7 @@ File.prototype.read = function(pos, len, cb) {
 File.prototype.readString = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read string: %d bytes at %d', len, pos);
 	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		cb(null, data.toString(), bytesRead);
@@ -123,6 +129,7 @@ File.prototype.readString = function(pos, len, cb) {
 File.prototype.readUIntBE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read uintBE: %d bytes at %d', len, pos);
 	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readUIntBE(0, len);
@@ -132,6 +139,7 @@ File.prototype.readUIntBE = function(pos, len, cb) {
 File.prototype.readUIntLE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read uintLE: %d bytes at %d', len, pos);
 	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readUIntLE(0, len);
@@ -141,6 +149,7 @@ File.prototype.readUIntLE = function(pos, len, cb) {
 File.prototype.readIntBE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read intBE: %d bytes at %d', len, pos);
 	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readIntBE(0, len);
@@ -150,6 +159,7 @@ File.prototype.readIntBE = function(pos, len, cb) {
 File.prototype.readIntLE = function(pos, len, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read intLE: %d bytes at %d', len, pos);
 	this.read(pos, len, (err, data, bytesRead) => {
 		if (err) return cb(err);
 		var value = data.readIntLE(0, len);
@@ -160,6 +170,7 @@ File.prototype.readIntLE = function(pos, len, cb) {
 File.prototype.readStringLenBE = function(pos, len_size, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read string with len prefix %d bytes at %d', len_size, pos);
 	this.readUIntBE(pos, len_size, (err, len, lenBytesRead) => {
 		if (err) return cb(err);
 
@@ -173,6 +184,7 @@ File.prototype.readStringLenBE = function(pos, len_size, cb) {
 File.prototype.readStringLenLE = function(pos, len_size, cb) {
 	cb = makeCallback(arguments, this);
 
+	debug('read string with len prefix %d bytes at %d', len_size, pos);
 	this.readUIntLE(pos, len_size, (err, len, lenBytesRead) => {
 		if (err) return cb(err);
 
@@ -185,7 +197,6 @@ File.prototype.readStringLenLE = function(pos, len_size, cb) {
 
 File.prototype.write = function(data, pos, cb) {
 	cb = makeCallback(arguments, this);
-	console.log('writing: ' + data);
 	fs.write(this.fd, data, 0, data.length, pos, cb);
 };
 
