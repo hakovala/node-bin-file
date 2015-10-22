@@ -1,0 +1,16 @@
+{
+  "name": "files",
+  "version": "0.1.0",
+  "description": "file utility module",
+  "main": "index.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hakovala/node-bin-file.git"
+  },
+  "author": {
+    "name": "Harri Kovalainen",
+    "email": "hakovala@gmail.com"
+  },
+  "dependencies": {}
+}
