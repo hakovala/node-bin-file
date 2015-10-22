@@ -11,5 +11,6 @@
     "name": "Harri Kovalainen",
     "email": "hakovala@gmail.com"
   },
+  "license": "MIT",
   "dependencies": {}
 }
