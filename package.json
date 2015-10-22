@@ -12,5 +12,7 @@
     "email": "hakovala@gmail.com"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "debug": "^2.2.0"
+  }
 }
